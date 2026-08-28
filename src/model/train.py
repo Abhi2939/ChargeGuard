@@ -85,13 +85,13 @@ def save_artifacts(raw_model, cal_model, feature_columns):
 
 
 def main():
-    X, y, _ = load_and_prepare_data()
+    X, y, _ = load_data()
     X_train, X_cal, X_test, y_train, y_cal, y_test = split_data(X, y)
 
     print(f"Train: {X_train.shape[0]}  Calibration: {X_cal.shape[0]}  Test: {X_test.shape[0]}")
 
     raw_model = train_raw_model(X_train, y_train)
-    cal_model = calibrate_model(raw_model, X_cal, y_cal)
+    cal_model = train_calibrated_model(raw_model, X_cal, y_cal)
 
     raw_probs = raw_model.predict_proba(X_test)[:, 1]
     cal_probs = cal_model.predict_proba(X_test)[:, 1]
