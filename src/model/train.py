@@ -68,7 +68,7 @@ def train_calibrated_model(X_cal,y_cal,raw_model):
     return cal_model
 
 def report_scores(y_test, raw_probs, cal_probs):
-    
+
     print("=== Calibration comparison ===")
     print(f"Brier score  — raw: {brier_score_loss(y_test, raw_probs):.4f}   "
           f"calibrated: {brier_score_loss(y_test, cal_probs):.4f}")
@@ -84,7 +84,24 @@ def save_artifacts(raw_model, cal_model, feature_columns):
     joblib.dump(feature_columns, os.path.join(ARTIFACTS_DIR, "feature_columns.pkl"))
 
 
+def main():
+    X, y, _ = load_and_prepare_data()
+    X_train, X_cal, X_test, y_train, y_cal, y_test = split_data(X, y)
 
+    print(f"Train: {X_train.shape[0]}  Calibration: {X_cal.shape[0]}  Test: {X_test.shape[0]}")
+
+    raw_model = train_raw_model(X_train, y_train)
+    cal_model = calibrate_model(raw_model, X_cal, y_cal)
+
+    raw_probs = raw_model.predict_proba(X_test)[:, 1]
+    cal_probs = cal_model.predict_proba(X_test)[:, 1]
+    report_scores(y_test, raw_probs, cal_probs)
+
+    save_artifacts(raw_model, cal_model, X.columns.tolist())
+
+
+if __name__ == "__main__":
+    main()
 
     
 
