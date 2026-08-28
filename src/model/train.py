@@ -10,8 +10,8 @@ from sklearn.calibration import CalibratedClassifierCV
 from sklearn.frozen import FrozenEstimator
 
 
-DATA_PATH = os.path.join(os.path.dirname("data/dispute_dataset.csv"))
-ARTIFACTS_DIR = os.path.join(os.path.dirname("artifacts"))
+DATA_PATH = os.path.join("data", "dispute_dataset.csv")
+ARTIFACTS_DIR = os.path.join("src", "model", "artifacts")
 
 CATEGORICAL_COLS = ["reason_code", "product_category", "payment_method", "delivery_confirmed"]
 DROP_COLS = ["case_id", "_true_win_prob_debug_only"]
@@ -91,7 +91,7 @@ def main():
     print(f"Train: {X_train.shape[0]}  Calibration: {X_cal.shape[0]}  Test: {X_test.shape[0]}")
 
     raw_model = train_raw_model(X_train, y_train)
-    cal_model = train_calibrated_model(raw_model, X_cal, y_cal)
+    cal_model = train_calibrated_model(X_cal, y_cal,raw_model)
 
     raw_probs = raw_model.predict_proba(X_test)[:, 1]
     cal_probs = cal_model.predict_proba(X_test)[:, 1]
