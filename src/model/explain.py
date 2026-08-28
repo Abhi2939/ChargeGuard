@@ -3,10 +3,6 @@ import joblib
 import numpy as np
 import shap
 
-from model.train import load_data
-from model.train import split_data
-from model.train import train_raw_model
-
 
 ARTIFACTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "artifacts")
 
