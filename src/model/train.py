@@ -67,6 +67,23 @@ def train_calibrated_model(X_cal,y_cal,raw_model):
     cal_model.fit(X_cal, y_cal)
     return cal_model
 
+def report_scores(y_test, raw_probs, cal_probs):
+    
+    print("=== Calibration comparison ===")
+    print(f"Brier score  — raw: {brier_score_loss(y_test, raw_probs):.4f}   "
+          f"calibrated: {brier_score_loss(y_test, cal_probs):.4f}")
+    print(f"Log loss     — raw: {log_loss(y_test, raw_probs):.4f}   "
+          f"calibrated: {log_loss(y_test, cal_probs):.4f}")
+
+def save_artifacts(raw_model, cal_model, feature_columns):
+
+    os.makedirs(ARTIFACTS_DIR, exist_ok=True)
+
+    joblib.dump(raw_model, os.path.join(ARTIFACTS_DIR, "raw_model.pkl"))
+    joblib.dump(cal_model, os.path.join(ARTIFACTS_DIR, "calibrated_model.pkl"))
+    joblib.dump(feature_columns, os.path.join(ARTIFACTS_DIR, "feature_columns.pkl"))
+
+
 
 
     
