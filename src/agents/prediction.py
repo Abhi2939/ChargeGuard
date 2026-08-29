@@ -2,14 +2,14 @@ import os
 import sys
 import joblib
 
-from model.explain import load_raw_model,generate_shap,explain_case
-from agents.ingestion import ingest_case
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SRC_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
 
 if SRC_DIR not in sys.path:
     sys.path.insert(0,SRC_DIR)
+
+from model.explain import load_raw_model,generate_shap,explain_case
+from agents.ingestion import ingest_case
 
 ARTIFACTS_DIR = os.path.join(SRC_DIR, "model", "artifacts")
 
