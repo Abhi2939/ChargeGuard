@@ -49,4 +49,25 @@ def predict_case(case:dict,top_n_explanation: int = 4) -> dict:
     }
 
 
+if __name__ == "__main__":
+    sample_case = {
+        "reason_code": "item_not_received",
+        "product_category": "electronics",
+        "payment_method": "card",
+        "order_value": 4500,
+        "time_to_dispute_days": 5,
+        "days_remaining_to_respond": 12,
+        "delivery_confirmed": "not_shipped",
+        "communication_logs_present": True,
+        "device_ip_match_score": 0.4,
+        "listing_accuracy_score": 0.7,
+        "customer_prior_disputes": 0,
+        "customer_account_age_days": 300,
+    }
+
+    result = predict_case(sample_case)
+    print(f"Calibrated P(win): {result['calibrated_probability']:.3f}")
+    print("Explanation:")
+    for line in result["explanation"]:
+        print(" ", line)
 
