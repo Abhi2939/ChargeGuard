@@ -50,3 +50,25 @@ def ingest_case(case:dict,feature_columns=None) -> pd.DataFrame:
     case_final = case_encoded.reindex(columns=feature_columns,fill_value=0)
 
     return case_final
+
+
+if __name__ == "__main__":
+    sample_case = {
+        "reason_code": "item_not_received",
+        "product_category": "electronics",
+        "payment_method": "card",
+        "order_value": 4500,
+        "time_to_dispute_days": 5,
+        "days_remaining_to_respond": 12,
+        "delivery_confirmed": "not_shipped",
+        "communication_logs_present": True,
+        "device_ip_match_score": 0.4,
+        "listing_accuracy_score": 0.7,
+        "customer_prior_disputes": 0,
+        "customer_account_age_days": 300,
+    }
+
+    encoded = ingest_case(sample_case)
+    print("Encoded shape:", encoded.shape)
+    print("Non-zero columns:")
+    print(encoded.loc[:, (encoded != 0).any(axis=0)].T)
