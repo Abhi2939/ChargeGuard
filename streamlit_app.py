@@ -3,9 +3,9 @@ import streamlit as st
 
 API_URL = "http://localhost:8000"
 
-st.set_page_config(page_title="Calibrated Dispute Agent", page_icon="⚖️", layout="centered")
+st.set_page_config(page_title="ChargeGuard", page_icon="⚖️", layout="centered")
 
-st.title("⚖️ Calibrated Dispute Agent")
+st.title("⚖️ ChargeGuard")
 st.caption(
     "Predicts whether a merchant will win a chargeback dispute, with a "
     "calibrated confidence score -- and recommends fight, drop, or human review."

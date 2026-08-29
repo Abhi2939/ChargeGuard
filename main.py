@@ -7,6 +7,7 @@ from pydantic import BaseModel
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
 
 from agents.orchestrator import run_pipeline
+from utils.audit_log import read_audit_log
 
 app = FastAPI()
 
@@ -42,3 +43,10 @@ def evaluate_case(case:DisputeCase):
         "prediction": result["prediction_result"],
         "decision": result["decision"],
     }
+
+
+@app.get("/audit-log")
+def get_audit_log(limit:int = 5):
+
+    records = read_audit_log()
+    return {"count": len(records), "entries": records[-limit:]}
