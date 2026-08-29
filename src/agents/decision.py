@@ -73,3 +73,9 @@ def narrate_decision(case: dict,prediction_result: dict, decision: dict) -> str:
             f"[narration unavailable: {e}] "
             f"Recommendation: {decision['action'].upper()}. {decision['reasoning']}"
         )
+
+def decide_case(case: dict, prediction_result: dict) -> dict:
+    """Full decision step: deterministic branch + LLM narration."""
+    decision = make_decision(prediction_result["calibrated_probability"])
+    decision["narration"] = narrate_decision(case, prediction_result, decision)
+    return decision
