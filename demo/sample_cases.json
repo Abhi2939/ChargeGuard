@@ -1,0 +1,53 @@
+[
+  {
+    "label": "STRONG (evidence favors merchant)",
+    "case": {
+      "reason_code": "item_not_received",
+      "product_category": "groceries",
+      "payment_method": "wallet",
+      "order_value": 2602.63,
+      "time_to_dispute_days": 1,
+      "days_remaining_to_respond": 20,
+      "delivery_confirmed": "signed_confirmation",
+      "communication_logs_present": true,
+      "device_ip_match_score": 0.336,
+      "listing_accuracy_score": 0.692,
+      "customer_prior_disputes": 2,
+      "customer_account_age_days": 150
+    }
+  },
+  {
+    "label": "WEAK (evidence favors dropping)",
+    "case": {
+      "reason_code": "item_not_received",
+      "product_category": "groceries",
+      "payment_method": "card",
+      "order_value": 337.26,
+      "time_to_dispute_days": 1,
+      "days_remaining_to_respond": 12,
+      "delivery_confirmed": "not_shipped",
+      "communication_logs_present": false,
+      "device_ip_match_score": 0.071,
+      "listing_accuracy_score": 0.503,
+      "customer_prior_disputes": 0,
+      "customer_account_age_days": 534
+    }
+  },
+  {
+    "label": "BORDERLINE (needs human review)",
+    "case": {
+      "reason_code": "fraud_card_not_present",
+      "product_category": "digital_goods",
+      "payment_method": "card",
+      "order_value": 1567.74,
+      "time_to_dispute_days": 16,
+      "days_remaining_to_respond": 7,
+      "delivery_confirmed": "signed_confirmation",
+      "communication_logs_present": false,
+      "device_ip_match_score": 0.092,
+      "listing_accuracy_score": 0.469,
+      "customer_prior_disputes": 0,
+      "customer_account_age_days": 127
+    }
+  }
+]
