@@ -44,7 +44,7 @@ def decide_node(state:DisputeState) -> DisputeState:
 
     if state.get("error"):
         return state
-    state["decision"] = decide_case(state["case"])
+    state["decision"] = decide_case(state["case"],state["prediction_result"])
 
     return state
 
@@ -67,13 +67,15 @@ def build_graph():
     graph.add_node("log_audit",audit_node)
 
 
-    graph.add_edge(START,"ingest_node")
-    graph.add_edge("ingest_node","predict_node")
-    graph.add_edge("predict_node","decide_node")
-    graph.add_edge("decide_node","audit_node")
-    graph.add_edge("audit_node",END)
+    graph.add_edge(START,"ingest")
+    graph.add_edge("ingest","predict")
+    graph.add_edge("predict","decide")
+    graph.add_edge("decide","log_audit")
+    graph.add_edge("log_audit",END)
 
     return graph.compile()
+
+_compiled_graph = None
 
 def run_pipeline(case:dict) -> DisputeState:
 
@@ -84,6 +86,33 @@ def run_pipeline(case:dict) -> DisputeState:
     result = _compiled_graph.invoke({"case": case})
     return result
 
+if __name__ == "__main__":
+    sample_case = {
+        "reason_code": "item_not_received",
+        "product_category": "electronics",
+        "payment_method": "card",
+        "order_value": 4500,
+        "time_to_dispute_days": 5,
+        "days_remaining_to_respond": 12,
+        "delivery_confirmed": "not_shipped",
+        "communication_logs_present": True,
+        "device_ip_match_score": 0.4,
+        "listing_accuracy_score": 0.7,
+        "customer_prior_disputes": 0,
+        "customer_account_age_days": 300,
+    }
 
+    result = run_pipeline(sample_case)
+
+    if result.get("error"):
+        print("Pipeline error:", result["error"])
+    else:
+        print(f"Calibrated P(win): {result['prediction_result']['calibrated_probability']:.3f}")
+        print("Explanation:")
+        for line in result["prediction_result"]["explanation"]:
+            print(" ", line)
+        print(f"\nDecision: {result['decision']['action'].upper()}")
+        print("Reasoning:", result["decision"]["reasoning"])
+        print("Narration:", result["decision"]["narration"])
 
     
