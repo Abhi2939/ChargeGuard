@@ -1,8 +1,11 @@
 import os
 from groq import Groq
+from dotenv import load_dotenv
 
 FIGHT_THRESHOLD = 0.75
 DROP_THRESHOLD = 0.40
+
+load_dotenv()
 
 def make_decision(calibrated_probability: float) -> dict:
 
@@ -61,7 +64,7 @@ def narrate_decision(case: dict,prediction_result: dict, decision: dict) -> str:
         )
 
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             max_tokens=300,
             messages=[{"role": "user", "content": prompt}],
         )
