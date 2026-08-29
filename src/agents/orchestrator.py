@@ -75,5 +75,15 @@ def build_graph():
 
     return graph.compile()
 
+def run_pipeline(case:dict) -> DisputeState:
+
+    global _compiled_graph
+    if _compiled_graph is None:
+        _compiled_graph = build_graph()
+
+    result = _compiled_graph.invoke({"case": case})
+    return result
+
+
 
     
