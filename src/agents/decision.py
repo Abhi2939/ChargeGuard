@@ -1,5 +1,5 @@
 import os
-
+from groq import Groq
 
 FIGHT_THRESHOLD = 0.75
 DROP_THRESHOLD = 0.40
@@ -33,4 +33,43 @@ def make_decision(calibrated_probability: float) -> dict:
         "reasoning":reasoning
     }
 
+def narrate_decision(case: dict,prediction_result: dict, decision: dict) -> str:
 
+    api_key = os.environ.get("GROQ_API_KEY")
+    explanation_text = ";".join(prediction_result["explanation"])
+
+    if not api_key:
+        return (
+            f"[template fallback -- no GROQ_API_KEY set] "
+            f"Recommendation: {decision['action'].upper()}. "
+            f"{decision['reasoning']} Key factors: {explanation_text}."
+        )
+
+    try:
+        client = Groq(api_key=api_key)
+
+        prompt = (
+            f"You are narrating a chargeback dispute decision for a merchant dashboard. "
+            f"Do NOT change or second-guess the decision -- only explain it clearly and briefly.\n\n"
+            f"Reason code: {case.get('reason_code')}\n"
+            f"Order value: Rs {case.get('order_value')}\n"
+            f"Calibrated win probability: {prediction_result['calibrated_probability']:.2%}\n"
+            f"Decision: {decision['action'].upper()}\n"
+            f"Decision logic: {decision['reasoning']}\n"
+            f"Top contributing factors: {explanation_text}\n\n"
+            f"Write a 2-3 sentence explanation for the merchant, in plain language."
+        )
+
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            max_tokens=300,
+            messages=[{"role": "user", "content": prompt}],
+        )
+
+        return response.choices[0].message.content
+
+    except Exception as e:
+        return (
+            f"[narration unavailable: {e}] "
+            f"Recommendation: {decision['action'].upper()}. {decision['reasoning']}"
+        )
